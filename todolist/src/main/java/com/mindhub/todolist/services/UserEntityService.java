@@ -1,6 +1,7 @@
 package com.mindhub.todolist.services;
 
 import com.mindhub.todolist.dtos.UserEntityDTO;
+import com.mindhub.todolist.dtos.UserRegistrationDTO;
 import com.mindhub.todolist.exceptions.UserAlreadyExistsException;
 import com.mindhub.todolist.exceptions.UserNotFoundException;
 
@@ -12,4 +13,5 @@ public interface UserEntityService {
     UserEntityDTO updateUser(Long id, UserEntityDTO userDetailsDTO) throws UserNotFoundException;
     UserEntityDTO createNewUser(UserEntityDTO newUserDTO) throws UserAlreadyExistsException;
     void deleteUser(Long id);
+    void registerUser(UserRegistrationDTO userRegistrationDTO);
 }

@@ -2,12 +2,14 @@ package com.mindhub.todolist.services.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mindhub.todolist.dtos.UserEntityDTO;
+import com.mindhub.todolist.dtos.UserRegistrationDTO;
 import com.mindhub.todolist.exceptions.UserAlreadyExistsException;
 import com.mindhub.todolist.exceptions.UserNotFoundException;
 import com.mindhub.todolist.models.TaskEntity;
 import com.mindhub.todolist.models.UserEntity;
 import com.mindhub.todolist.repositories.UserEntityRepository;
 import com.mindhub.todolist.services.UserEntityService;
+import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -64,6 +66,17 @@ public class UserEntityServiceImpl implements UserEntityService {
     @Override
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public void registerUser(UserRegistrationDTO userRegistrationDTO) {
+        if (userRepository.existsByUsername(userRegistrationDTO.getUsername())) {
+            throw new RuntimeException("Username already exists");
+        }
+
+        UserEntity user = new UserEntity();
+        user.setUsername(userRegistrationDTO.getUsername());
+        user.setPassword(userRegistrationDTO.getPassword());
     }
 
     public List<UserEntity> findByUsername(String username) {
