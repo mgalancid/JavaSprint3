@@ -1,5 +1,6 @@
 package com.mindhub.todolist.controllers;
 
+import com.mindhub.todolist.dtos.NewTaskEntityDTO;
 import com.mindhub.todolist.dtos.TaskEntityDTO;
 import com.mindhub.todolist.dtos.UserEntityDTO;
 import com.mindhub.todolist.exceptions.TaskNotFoundException;
@@ -78,7 +79,7 @@ public class TaskEntityController {
             @ApiResponse(responseCode = "409", description = "Conflict data.")
     })
     @PostMapping
-    public TaskEntityDTO createNewTask(@RequestBody TaskEntityDTO taskDTO) {
+    public TaskEntityDTO createNewTask(@RequestBody NewTaskEntityDTO taskDTO) {
         return taskService.createNewTask(taskDTO);
     }
 
@@ -96,6 +97,4 @@ public class TaskEntityController {
     public void deleteTask(@PathVariable Long id) {
         taskService.deleteTask(id);
     }
-
-
 }
