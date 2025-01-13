@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +27,11 @@ public class UserEntityController {
 
     public UserEntityController(UserEntityServiceImpl userService) {
         this.userService = userService;
+    }
+
+    @GetMapping
+    public String getUserName(Authentication authentication){
+        return authentication.getName();
     }
 
     @Operation(summary = "Get User ID", description = "Retrieves the id of an User.")
