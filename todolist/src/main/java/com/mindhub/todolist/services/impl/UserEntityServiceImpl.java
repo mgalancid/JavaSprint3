@@ -1,6 +1,7 @@
 package com.mindhub.todolist.services.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mindhub.todolist.dtos.NewUserEntityDTO;
 import com.mindhub.todolist.dtos.UserEntityDTO;
 import com.mindhub.todolist.dtos.UserRegistrationDTO;
 import com.mindhub.todolist.exceptions.UserAlreadyExistsException;
@@ -57,7 +58,7 @@ public class UserEntityServiceImpl implements UserEntityService {
     }
 
     @Override
-    public UserEntityDTO createNewUser(UserEntityDTO userDTO) throws UserAlreadyExistsException {
+    public UserEntityDTO createNewUser(NewUserEntityDTO userDTO) throws UserAlreadyExistsException {
         UserEntity userEntity = objectMapper.convertValue(userDTO, UserEntity.class);
         UserEntity savedUser = userRepository.save(userEntity);
         return objectMapper.convertValue(savedUser, UserEntityDTO.class);
