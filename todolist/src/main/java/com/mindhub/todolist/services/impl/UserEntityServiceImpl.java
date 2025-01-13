@@ -11,6 +11,7 @@ import com.mindhub.todolist.services.UserEntityService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -69,7 +70,7 @@ public class UserEntityServiceImpl implements UserEntityService {
         return userRepository.findByUsername(username);
     }
 
-    public List<UserEntity> findByEmail(String email) {
+    public Optional<UserEntity> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 

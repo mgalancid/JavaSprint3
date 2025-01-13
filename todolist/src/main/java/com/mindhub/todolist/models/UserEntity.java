@@ -13,6 +13,7 @@ public class UserEntity {
     private String username;
     private String password;
     private String email;
+    private RoleType role = RoleType.USER;
 
     public UserEntity() { // Hibernate
 
@@ -61,6 +62,14 @@ public class UserEntity {
 
     public void setTask(Set<TaskEntity> task) {
         this.tasks = task;
+    }
+
+    public RoleType getRole() {
+        return role;
+    }
+
+    public void setRole(RoleType role) {
+        this.role = role;
     }
 
     public void addTask(TaskEntity task) {
