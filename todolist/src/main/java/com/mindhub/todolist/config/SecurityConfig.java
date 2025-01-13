@@ -39,9 +39,12 @@ public class SecurityConfig {
                 // Disable CSRF for REST APIs
                 .authorizeHttpRequests( authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html" ,"/h2-console/**").permitAll()
+                                .requestMatchers("/v3/api-docs/**", 
+                                                            "/swagger-ui/**",
+                                                            "/swagger-ui.html",
+                                                            "/h2-console/**").permitAll()
                                 .requestMatchers( "/api/auth/**", "/index.html" ).permitAll()
-                                .requestMatchers("/api/user/**").hasAuthority("USER")
+                                .requestMatchers("/api/user/**").hasAnyAuthority("USER", "ADMIN")
                                 .requestMatchers("/api/admin/**").hasAuthority("ADMIN")// Allow public access to specific endpoints
                                 .anyRequest().denyAll() // All other requests must be authenticated
                 )
