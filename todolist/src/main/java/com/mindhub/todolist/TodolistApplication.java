@@ -25,16 +25,20 @@ public class TodolistApplication {
 	public CommandLineRunner initData(UserEntityRepository userEntityRepository,
 									  TaskEntityRepository taskEntityRepository) {
 		return args -> {
-			UserEntity userEntity = new UserEntity("John Doe",
-													passwordEncoder.encode("12345678"),
-													"johndoe@example.com");
-			userEntityRepository.save(userEntity);
-			System.out.println(userEntity);
+			UserEntity user = new UserEntity("John Doe",
+					passwordEncoder.encode("12345678"),
+											"johndoe@example.com");
+			userEntityRepository.save(user);
+			UserEntity admin = new UserEntity("Jane Doe",
+					passwordEncoder.encode("12345678"),
+											"janedoe@example.com");
+			userEntityRepository.save(admin);
+			System.out.println(user);
 
 			TaskEntity taskEntity = new TaskEntity("Task 1",
 													"In Progress Task",
 													TaskEntity.TaskStatus.IN_PROCESS);
-			userEntity.addTask(taskEntity);
+			user.addTask(taskEntity);
 			taskEntityRepository.save(taskEntity);
 			System.out.println(taskEntity);
 		};
