@@ -1,6 +1,7 @@
 package com.mindhub.todolist.services.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mindhub.todolist.dtos.NewTaskEntityDTO;
 import com.mindhub.todolist.dtos.TaskEntityDTO;
 import com.mindhub.todolist.exceptions.TaskNotFoundException;
 import com.mindhub.todolist.models.TaskEntity;
@@ -56,8 +57,8 @@ public class TaskEntityServiceImpl implements TaskEntityService {
     }
 
     @Override
-    public TaskEntityDTO createNewTask(TaskEntityDTO taskEntityDTO) {
-        TaskEntity taskEntity = objectMapper.convertValue(taskEntityDTO, TaskEntity.class);
+    public TaskEntityDTO createNewTask(NewTaskEntityDTO newTaskDTO) {
+        TaskEntity taskEntity = objectMapper.convertValue(newTaskDTO, TaskEntity.class);
         TaskEntity savedTask = taskRepository.save(taskEntity);
         return objectMapper.convertValue(savedTask, TaskEntityDTO.class);
     }
