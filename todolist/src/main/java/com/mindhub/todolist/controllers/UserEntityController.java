@@ -1,5 +1,6 @@
 package com.mindhub.todolist.controllers;
 
+import com.mindhub.todolist.dtos.NewUserEntityDTO;
 import com.mindhub.todolist.dtos.UserEntityDTO;
 import com.mindhub.todolist.exceptions.UserNotFoundException;
 import com.mindhub.todolist.services.impl.UserEntityServiceImpl;
@@ -83,8 +84,8 @@ public class UserEntityController {
             @ApiResponse(responseCode = "409", description = "Conflict data.")
     })
     @PostMapping // Create New User
-    public ResponseEntity<UserEntityDTO> createNewUser(@RequestBody UserEntityDTO userDTO) {
-        UserEntityDTO createdUser = userService.createNewUser(userDTO);
+    public ResponseEntity<UserEntityDTO> createNewUser(@RequestBody NewUserEntityDTO newUserDTO) {
+        UserEntityDTO createdUser = userService.createNewUser(newUserDTO);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
