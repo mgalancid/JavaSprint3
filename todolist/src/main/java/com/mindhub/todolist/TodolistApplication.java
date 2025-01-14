@@ -31,7 +31,7 @@ public class TodolistApplication {
 											"johndoe@example.com");
 			userEntityRepository.save(user);
 			UserEntity admin = new UserEntity("Jane Doe",
-					passwordEncoder.encode("12345678"),
+					passwordEncoder.encode("admin123"),
 											"janedoe@example.com");
 			admin.setRole(RoleType.ADMIN);
 			userEntityRepository.save(admin);
