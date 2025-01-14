@@ -2,12 +2,13 @@ package com.mindhub.todolist.services.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mindhub.todolist.dtos.UserEntityDTO;
-import com.mindhub.todolist.dtos.UserRegistrationDTO;
-import com.mindhub.todolist.exceptions.UserAlreadyExistsException;
 import com.mindhub.todolist.exceptions.UserNotFoundException;
+import com.mindhub.todolist.models.RegisterUser;
 import com.mindhub.todolist.models.UserEntity;
 import com.mindhub.todolist.repositories.UserEntityRepository;
 import com.mindhub.todolist.services.UserEntityService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,7 +17,11 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserEntityServiceImpl implements UserEntityService {
+    @Autowired
     private UserEntityRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     private ObjectMapper objectMapper;
 
     public UserEntityServiceImpl(UserEntityRepository userRepository,
@@ -69,14 +74,14 @@ public class UserEntityServiceImpl implements UserEntityService {
     }
 
     @Override
-    public void registerUser(UserRegistrationDTO userRegistrationDTO) {
-        if (userRepository.existsByUsername(userRegistrationDTO.getUsername())) {
+    public void registerUser(RegisterUser registerUser) {
+        if (userRepository.existsByUsername(registerUser.email())) {
             throw new RuntimeException("Username already exists");
         }
 
         UserEntity user = new UserEntity();
-        user.setUsername(userRegistrationDTO.getUsername());
-        user.setPassword(userRegistrationDTO.getPassword());
+        user.setUsername(registerUser.email());
+        user.setPassword(passwordEncoder.encode(registerUser.password()));
     }
 
     public Optional<UserEntity> findByUsername(String username) {
