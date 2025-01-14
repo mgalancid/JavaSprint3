@@ -64,6 +64,7 @@ public class UserEntityServiceImpl implements UserEntityService {
         UserEntity user = userRepository.findByUsername(username).orElseThrow(
                 () -> new UserNotFoundException("User not found with username: " + username)
         );
+        UserEntityDTO userDTO = objectMapper.convertValue(user, UserEntityDTO.class);
         userRepository.delete(user);
     }
 
