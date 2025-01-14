@@ -1,6 +1,7 @@
 package com.mindhub.todolist.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -10,7 +11,11 @@ public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotBlank
     private String username;
+    
+    @NotBlank
     private String password;
     @Column(unique = true)
     private String email;
