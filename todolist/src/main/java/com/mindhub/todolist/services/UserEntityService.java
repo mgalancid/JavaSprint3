@@ -1,7 +1,6 @@
 package com.mindhub.todolist.services;
 
 import com.mindhub.todolist.dtos.UserEntityDTO;
-import com.mindhub.todolist.dtos.UserRegistrationDTO;
 import com.mindhub.todolist.exceptions.UserAlreadyExistsException;
 import com.mindhub.todolist.exceptions.UserNotFoundException;
 import com.mindhub.todolist.models.RegisterUser;
