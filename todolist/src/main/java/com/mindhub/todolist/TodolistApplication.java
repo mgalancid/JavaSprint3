@@ -1,5 +1,6 @@
 package com.mindhub.todolist;
 
+import com.mindhub.todolist.models.RoleType;
 import com.mindhub.todolist.models.TaskEntity;
 import com.mindhub.todolist.models.UserEntity;
 import com.mindhub.todolist.repositories.TaskEntityRepository;
@@ -32,6 +33,7 @@ public class TodolistApplication {
 			UserEntity admin = new UserEntity("Jane Doe",
 					passwordEncoder.encode("12345678"),
 											"janedoe@example.com");
+			admin.setRole(RoleType.ADMIN);
 			userEntityRepository.save(admin);
 			System.out.println(user);
 
