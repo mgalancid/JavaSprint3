@@ -29,7 +29,8 @@ public class UserEntityController {
         this.userService = userService;
     }
 
-    @GetMapping
+    @Operation(summary = "Get User's username", description = "Retrieves the id of an User")
+    @GetMapping("/username")
     public String getUserName(Authentication authentication){
         return authentication.getName();
     }
@@ -57,7 +58,7 @@ public class UserEntityController {
             @ApiResponse(responseCode = "204", description = "No users found.",
                     content = @Content)
     })
-    @GetMapping // Get All Users
+    @GetMapping() // Get All Users
     public ResponseEntity<List<UserEntityDTO>> getAllUsersDTO() {
         List<UserEntityDTO> userDTOS = userService.getAllUsersDTO();
         return ResponseEntity.ok(userDTOS);
