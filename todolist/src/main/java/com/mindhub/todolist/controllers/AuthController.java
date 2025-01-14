@@ -1,13 +1,10 @@
 package com.mindhub.todolist.controllers;
 
 import com.mindhub.todolist.config.JwtUtils;
-import com.mindhub.todolist.dtos.UserEntityDTO;
-import com.mindhub.todolist.dtos.UserRegistrationDTO;
 import com.mindhub.todolist.models.LoginUser;
+import com.mindhub.todolist.models.RegisterUser;
 import com.mindhub.todolist.services.impl.UserEntityServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +38,7 @@ public class AuthController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User was logged."),
             @ApiResponse(responseCode = "400", description = "Invalid input data."),
-            @ApiResponse(responseCode = "401", description = "Bad request.")
+            @ApiResponse(responseCode = "403", description = "Bad request.")
 
 
     })
@@ -63,13 +60,13 @@ public class AuthController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User was registered."),
             @ApiResponse(responseCode = "400", description = "Invalid input data."),
-            @ApiResponse(responseCode = "401", description = "Bad request.")
+            @ApiResponse(responseCode = "403", description = "Bad request.")
 
 
     })
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody UserRegistrationDTO registrationDto) {
-        userService.registerUser(registrationDto);
+    public ResponseEntity<String> registerUser(@RequestBody RegisterUser registerUser) {
+        userService.registerUser(registerUser);
         return ResponseEntity.ok("User registered successfully");
     }
 }
