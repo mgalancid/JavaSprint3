@@ -79,23 +79,7 @@ public class UserEntityController {
         return ResponseEntity.ok(updatedUser);
     }
 
-    @Operation(summary = "Create New User", description = "Creates a new User object from.",
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "The data to be created",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = UserEntityDTO.class))))
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "User successfully created."),
-            @ApiResponse(responseCode = "400", description = "Bad request, invalid data."),
-            @ApiResponse(responseCode = "409", description = "Conflict data.")
-    })
-    @PostMapping // Create New User
-    public ResponseEntity<UserEntityDTO> createNewUser(@RequestBody NewUserEntityDTO newUserDTO) {
-        UserEntityDTO createdUser = userService.createNewUser(newUserDTO);
-        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
-    }
-
-    @Operation(summary = "Delete User",
+    @Operation(summary = "Delete User By ID",
             description = "Deletes the User with the given ID.",
             parameters = {
                     @Parameter(name = "id", description = "The ID of the user to delete",
@@ -105,8 +89,8 @@ public class UserEntityController {
                     @ApiResponse(responseCode = "204", description = "User deleted successfully"),
                     @ApiResponse(responseCode = "404", description = "User not found")
             })
-    @DeleteMapping("/{id}") // Create New User
+    @DeleteMapping("/{id}") // Delete User By ID
     public void deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
+        userService.deleteUserById(id);
     }
 }
