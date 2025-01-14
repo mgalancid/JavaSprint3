@@ -12,7 +12,7 @@ public interface UserEntityService {
     UserEntityDTO getUserDTOById(Long id) throws UserNotFoundException;
     List<UserEntityDTO> getAllUsersDTO();
     UserEntityDTO updateUser(Long id, UserEntityDTO userDetailsDTO) throws UserNotFoundException;
-    UserEntityDTO createNewUser(NewUserEntityDTO newUserDTO) throws UserAlreadyExistsException;
-    void deleteUser(Long id);
+    void deleteUserById(Long id);
+    void deleteUserByUsername(String username) throws UserNotFoundException;
     void registerUser(UserRegistrationDTO userRegistrationDTO);
 }
