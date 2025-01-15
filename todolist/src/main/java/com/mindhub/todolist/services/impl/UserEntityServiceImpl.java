@@ -2,6 +2,8 @@ package com.mindhub.todolist.services.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mindhub.todolist.dtos.UserEntityDTO;
+import com.mindhub.todolist.exceptions.EmailAlreadyExistsException;
+import com.mindhub.todolist.exceptions.UserAlreadyExistsException;
 import com.mindhub.todolist.exceptions.UserNotFoundException;
 import com.mindhub.todolist.models.RegisterUser;
 import com.mindhub.todolist.models.UserEntity;
@@ -53,6 +55,7 @@ public class UserEntityServiceImpl implements UserEntityService {
         UserEntity existingUser = userRepository.findById(id).orElseThrow(
                 () -> new UserNotFoundException("User not found with id: " + id)
         );
+
         existingUser.setUsername(userDetailsDTO.getName());
         existingUser.setEmail(userDetailsDTO.getEmail());
         UserEntity updatedUser = userRepository.save(existingUser);
@@ -76,12 +79,15 @@ public class UserEntityServiceImpl implements UserEntityService {
     @Override
     public void registerUser(RegisterUser registerUser) {
         if (userRepository.existsByUsername(registerUser.email())) {
-            throw new RuntimeException("Username already exists");
+            throw new UserAlreadyExistsException("Username already exists");
         }
 
         UserEntity user = new UserEntity();
-        user.setUsername(registerUser.email());
+        user.setUsername(registerUser.username());
+        user.setEmail(registerUser.email());
         user.setPassword(passwordEncoder.encode(registerUser.password()));
+
+        userRepository.save(user);
     }
 
     public Optional<UserEntity> findByUsername(String username) {
