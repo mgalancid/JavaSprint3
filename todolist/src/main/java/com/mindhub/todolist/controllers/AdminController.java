@@ -14,9 +14,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -66,10 +68,15 @@ public class AdminController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = UserEntityDTO.class)))
     })
-    @GetMapping("users/{id}") // Get User By ID
-    public ResponseEntity<UserEntityDTO> getUserDTOById(@PathVariable Long id) throws UserNotFoundException {
-        UserEntityDTO userDTO = userService.getUserDTOById(id);
-        return ResponseEntity.ok(userDTO);
+    @GetMapping("/{id}") // Get User By ID
+    public ResponseEntity<?> getUserById(Authentication authentication, @PathVariable Long id) throws UserNotFoundException {
+        authentication.getName();
+        try {
+            UserEntityDTO user = userService.getUserDTOById(id);
+            return ResponseEntity.ok(user);
+        } catch (UserNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with ID " + id + " not found.");
+        }
     }
 
     @Operation(summary = "Get All Tasks", description = "Retrieves all tasks from users.")
@@ -100,6 +107,22 @@ public class AdminController {
     public ResponseEntity<TaskEntityDTO> getTaskDTOByID(@PathVariable Long id) throws TaskNotFoundException {
         TaskEntityDTO taskDTO = taskService.getTaskDTOById(id);
         return ResponseEntity.ok(taskDTO);
+    }
+
+    @Operation(summary = "Assign Task by ID", description = "Assigns a tasks to a user by using it's ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User got assigned with a task.",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = TaskEntityDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Couldn't find user.",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = TaskEntityDTO.class)))
+    })
+    @PutMapping("/{id}/assign/{userId}")
+    public ResponseEntity<TaskEntityDTO> assignTaskById(@PathVariable Long id,
+                                                        @PathVariable Long userId) {
+        TaskEntityDTO assignedTask = taskService.assignTaskById(id, userId);
+        return ResponseEntity.ok(assignedTask);
     }
 
     @DeleteMapping("/users/{id}") // Delete Admin By ID

@@ -32,12 +32,6 @@ public class UserEntityController {
         this.taskService = taskService;
     }
 
-    @Operation(summary = "Get User's username", description = "Retrieves the email of an user")
-    @GetMapping("/username")
-    public String getUserName(Authentication authentication){
-        return authentication.getName();
-    }
-
     @Operation(summary = "Upload User By ID", description = "Uploads the information of an user by an given ID.",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "The data to be uploaded.",
@@ -54,7 +48,7 @@ public class UserEntityController {
         return ResponseEntity.ok(task);
     }
 
-    @PostMapping("/{userId}/tasks") // Create Task
+    @PostMapping("tasks") // Create Task
     public ResponseEntity<TaskEntityDTO> createNewTask(@RequestBody NewTaskEntityDTO newTaskDTO) {
 
         TaskEntityDTO createdTaskDTO = taskService.createNewTask(newTaskDTO);
@@ -64,4 +58,11 @@ public class UserEntityController {
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(createdTaskDTO);
     }
+
+    @PutMapping("/{id}/assign")
+    public ResponseEntity<TaskEntityDTO> assignTask(@PathVariable Long id, @RequestBody UserEntityDTO user) {
+        TaskEntityDTO assignedTask = taskService.assignTask(id, user);
+        return ResponseEntity.ok(assignedTask);
+    }
+
 }

@@ -3,6 +3,7 @@ package com.mindhub.todolist.services.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mindhub.todolist.dtos.NewTaskEntityDTO;
 import com.mindhub.todolist.dtos.TaskEntityDTO;
+import com.mindhub.todolist.dtos.UserEntityDTO;
 import com.mindhub.todolist.exceptions.TaskNotFoundException;
 import com.mindhub.todolist.models.TaskEntity;
 import com.mindhub.todolist.models.UserEntity;
@@ -73,13 +74,15 @@ public class TaskEntityServiceImpl implements TaskEntityService {
     }
 
     @Override
-    public TaskEntityDTO assignTask(Long id, UserEntity user) {
-       TaskEntity task = taskRepository.findById(id).orElseThrow(
-               () -> new TaskNotFoundException("Task couldn't be found")
-       );
-       task.setUserEntity(user);
-       TaskEntity savedTask = taskRepository.save(task);
-       return new TaskEntityDTO(savedTask);
+    public TaskEntityDTO assignTask(Long id, UserEntityDTO userDTO) {
+        TaskEntity task = taskRepository.findById(id).orElseThrow(
+                () -> new TaskNotFoundException("Task couldn't be found")
+        );
+        UserEntity user = objectMapper.convertValue(userDTO, UserEntity.class);
+
+        task.setUserEntity(user);
+        TaskEntity savedTask = taskRepository.save(task);
+        return new TaskEntityDTO(savedTask);
     }
 
     @Override
@@ -87,7 +90,8 @@ public class TaskEntityServiceImpl implements TaskEntityService {
         UserEntity user = userRepository.findById(userId).orElseThrow(
                 () -> new TaskNotFoundException("Task couldn't be found")
         );
-        return assignTaskById(id, userId);
+        UserEntityDTO userDTO = new UserEntityDTO(user);
+        return assignTask(id, userDTO);
     }
 
     @Override
