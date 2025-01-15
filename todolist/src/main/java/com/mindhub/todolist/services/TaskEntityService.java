@@ -9,7 +9,7 @@ public interface TaskEntityService {
     TaskEntityDTO getTaskDTOById(Long id) throws TaskNotFoundException;
     List<TaskEntityDTO> getAllTasksDTO();
     TaskEntityDTO updateTask(Long id, TaskEntityDTO taskDetailsDTO) throws TaskNotFoundException;
-    TaskEntityDTO createNewTask(NewTaskEntityDTO newTaskEntityDTO);
+    TaskEntityDTO createNewTask(NewTaskEntityDTO newTaskDTO);
     void deleteTask(Long id);
 
 }
