@@ -59,9 +59,9 @@ public class UserEntityController {
             @ApiResponse(responseCode = "409", description = "Conflict data.")
     })
     @PostMapping("tasks") // Create Task
-    public ResponseEntity<TaskEntityDTO> createNewTask(@RequestBody NewTaskEntityDTO newTaskDTO) {
+    public ResponseEntity<NewTaskEntityDTO> createNewTask(@RequestBody NewTaskEntityDTO newTaskDTO) {
 
-        TaskEntityDTO createdTaskDTO = taskService.createNewTask(newTaskDTO);
+        NewTaskEntityDTO createdTaskDTO = taskService.createNewTask(newTaskDTO);
 
         if (createdTaskDTO == null) {
             return ResponseEntity.badRequest().build();

@@ -50,8 +50,12 @@ public class UserEntityServiceImpl implements UserEntityService {
                 () -> new UserNotFoundException("User not found with id: " + id)
         );
 
-        existingUser.setUsername(userDetailsDTO.getName());
-        existingUser.setEmail(userDetailsDTO.getEmail());
+        if (userDetailsDTO.getName() != null && !userDetailsDTO.getName().isEmpty()) {
+            existingUser.setUsername(userDetailsDTO.getName());
+        }
+        if (userDetailsDTO.getEmail() != null && !userDetailsDTO.getEmail().isEmpty()) {
+            existingUser.setEmail(userDetailsDTO.getEmail());
+        }
         UserEntity updatedUser = userRepository.save(existingUser);
         return new UserEntityDTO(updatedUser);
     }
