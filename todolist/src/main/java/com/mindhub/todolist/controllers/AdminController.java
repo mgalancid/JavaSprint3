@@ -120,7 +120,12 @@ public class AdminController {
     @PutMapping("/{id}/assign/{userId}")
     public ResponseEntity<TaskEntityDTO> assignTaskById(@PathVariable Long id,
                                                         @PathVariable Long userId) {
-        TaskEntityDTO assignedTask = taskService.assignTaskById(id, userId);
+        TaskEntityDTO assignedTask = null;
+        try {
+            assignedTask = taskService.assignTaskById(id, userId);
+        } catch (UserNotFoundException userNotFoundException) {
+            throw new RuntimeException(userNotFoundException);
+        }
         return ResponseEntity.ok(assignedTask);
     }
 

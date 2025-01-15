@@ -75,7 +75,7 @@ public class UserEntityController {
                             schema = @Schema(implementation = TaskEntityDTO.class)))
     })
     @PutMapping("/{id}/assign") // Assign Task
-    public ResponseEntity<TaskEntityDTO> assignTask(@PathVariable Long id, @RequestBody UserEntityDTO userDTO) {
+    public ResponseEntity<TaskEntityDTO> assignTask(@PathVariable Long id, @RequestBody UserEntityDTO userDTO) throws UserNotFoundException {
         TaskEntityDTO assignedTask = taskService.assignTask(id, userDTO);
         return ResponseEntity.ok(assignedTask);
     }

@@ -4,6 +4,7 @@ import com.mindhub.todolist.dtos.NewTaskEntityDTO;
 import com.mindhub.todolist.dtos.TaskEntityDTO;
 import com.mindhub.todolist.dtos.UserEntityDTO;
 import com.mindhub.todolist.exceptions.TaskNotFoundException;
+import com.mindhub.todolist.exceptions.UserNotFoundException;
 import com.mindhub.todolist.models.TaskEntity;
 import com.mindhub.todolist.models.UserEntity;
 import com.mindhub.todolist.repositories.TaskEntityRepository;
@@ -71,19 +72,21 @@ public class TaskEntityServiceImpl implements TaskEntityService {
     }
 
     @Override
-    public TaskEntityDTO assignTask(Long id, UserEntityDTO userDTO) {
-        TaskEntity task = taskRepository.findById(id).orElseThrow(
-                () -> new TaskNotFoundException("Task couldn't be found")
-        );
-        UserEntity user = new UserEntity();
+    public TaskEntityDTO assignTask(Long id, UserEntityDTO userDTO) throws UserNotFoundException {
+        TaskEntity task = taskRepository.findById(id)
+                .orElseThrow(() -> new TaskNotFoundException("Task with ID " + id + " couldn't be found"));
+
+        UserEntity user = userRepository.findById(userDTO.getId())
+                .orElseThrow(() -> new UserNotFoundException("User with ID " + userDTO.getId() + " couldn't be found"));
 
         task.setUserEntity(user);
         TaskEntity savedTask = taskRepository.save(task);
         return new TaskEntityDTO(savedTask);
     }
 
+
     @Override
-    public TaskEntityDTO assignTaskById(Long id, Long userId) {
+    public TaskEntityDTO assignTaskById(Long id, Long userId) throws UserNotFoundException {
         UserEntity user = userRepository.findById(userId).orElseThrow(
                 () -> new TaskNotFoundException("Task couldn't be found")
         );
