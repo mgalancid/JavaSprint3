@@ -30,12 +30,16 @@ public class TodolistApplication {
 					passwordEncoder.encode("12345678"),
 											"johndoe@example.com");
 			userEntityRepository.save(user);
+
+			System.out.println(user);
+
 			UserEntity admin = new UserEntity("Jane Doe",
 					passwordEncoder.encode("admin123"),
 											"janedoe@example.com");
 			admin.setRole(RoleType.ADMIN);
 			userEntityRepository.save(admin);
-			System.out.println(user);
+
+			System.out.println(admin);
 
 			TaskEntity taskEntity = new TaskEntity("Task 1",
 													"In Progress Task",
