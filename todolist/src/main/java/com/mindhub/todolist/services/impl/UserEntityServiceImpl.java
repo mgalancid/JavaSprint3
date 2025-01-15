@@ -4,6 +4,7 @@ import com.mindhub.todolist.dtos.UserEntityDTO;
 import com.mindhub.todolist.exceptions.UserAlreadyExistsException;
 import com.mindhub.todolist.exceptions.UserNotFoundException;
 import com.mindhub.todolist.models.RegisterUser;
+import com.mindhub.todolist.models.TaskEntity;
 import com.mindhub.todolist.models.UserEntity;
 import com.mindhub.todolist.repositories.UserEntityRepository;
 import com.mindhub.todolist.services.UserEntityService;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -56,6 +58,18 @@ public class UserEntityServiceImpl implements UserEntityService {
         if (userDetailsDTO.getEmail() != null && !userDetailsDTO.getEmail().isEmpty()) {
             existingUser.setEmail(userDetailsDTO.getEmail());
         }
+
+        if (userDetailsDTO.getTasks() != null && !userDetailsDTO.getTasks().isEmpty()) {
+            Set<TaskEntity> updatedTasks = userDetailsDTO.getTasks().stream().map(taskDTO -> {
+                TaskEntity taskEntity = new TaskEntity();
+                taskEntity.setTitle(taskDTO.getTitle());
+                taskEntity.setDescription(taskDTO.getDescription());
+                taskEntity.setStatus(taskDTO.getStatus());
+                return taskEntity;
+            }).collect(Collectors.toSet()); // Use a Set instead of a List
+            existingUser.setTask(updatedTasks);
+        }
+
         UserEntity updatedUser = userRepository.save(existingUser);
         return new UserEntityDTO(updatedUser);
     }
