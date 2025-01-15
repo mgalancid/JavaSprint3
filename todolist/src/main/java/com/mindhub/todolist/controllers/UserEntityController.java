@@ -79,4 +79,20 @@ public class UserEntityController {
         TaskEntityDTO assignedTask = taskService.assignTask(id, userDTO);
         return ResponseEntity.ok(assignedTask);
     }
+
+    @Operation(summary = "Delete User By Email", description = "Deletes an user by Email.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "User got deleted from the database."),
+            @ApiResponse(responseCode = "400", description = "User wasn't deleted.")
+    })
+    @DeleteMapping // Delete User by Email
+    public ResponseEntity<Void> deleteUserByEmail(@PathVariable String email) {
+        try {
+            userService.deleteUserByEmail(email);
+            return ResponseEntity.noContent().build();
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
 }

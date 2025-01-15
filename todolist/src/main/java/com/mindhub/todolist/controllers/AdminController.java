@@ -124,7 +124,12 @@ public class AdminController {
         return ResponseEntity.ok(assignedTask);
     }
 
-    @DeleteMapping("/users/{id}") // Delete User By ID
+    @Operation(summary = "Delete User By Id", description = "Deletes an user by id.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "User got deleted from the database."),
+            @ApiResponse(responseCode = "400", description = "User wasn't deleted.")
+    })
+    @DeleteMapping("/users/{id}") // Delete Admin By ID
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) throws UserNotFoundException {
             userService.deleteUser(id);
             return ResponseEntity.noContent().build();
