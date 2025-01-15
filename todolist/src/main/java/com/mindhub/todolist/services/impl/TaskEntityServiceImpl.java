@@ -11,6 +11,7 @@ import com.mindhub.todolist.repositories.TaskEntityRepository;
 import com.mindhub.todolist.repositories.UserEntityRepository;
 import com.mindhub.todolist.services.TaskEntityService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.config.Task;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,20 +25,18 @@ public class TaskEntityServiceImpl implements TaskEntityService {
 
     @Autowired
     private UserEntityRepository userRepository;
-    private ObjectMapper objectMapper;
 
     public TaskEntityServiceImpl(TaskEntityRepository taskRepository,
-                                 UserEntityRepository userRepository,
-                                 ObjectMapper objectMapper) {
+                                 UserEntityRepository userRepository) {
         this.taskRepository = taskRepository;
-        this.objectMapper = objectMapper;
+        this.userRepository = userRepository;
     }
     @Override
     public TaskEntityDTO getTaskDTOById(Long id) throws TaskNotFoundException {
         TaskEntity task = taskRepository.findById(id).orElseThrow(
                 () -> new TaskNotFoundException("Task not found with ID: " + id)
         );
-        return objectMapper.convertValue(task, TaskEntityDTO.class);
+        return new TaskEntityDTO(task);
     }
 
     @Override
@@ -45,8 +44,7 @@ public class TaskEntityServiceImpl implements TaskEntityService {
         List<TaskEntity> task = taskRepository.findAll();
         return task.stream()
                     .map(
-                            taskEntity -> objectMapper.convertValue(taskEntity,
-                                                                                TaskEntityDTO.class)
+                            taskEntity ->  new TaskEntityDTO(taskEntity)
                     )
                     .collect(Collectors.toList());
     }
@@ -60,7 +58,7 @@ public class TaskEntityServiceImpl implements TaskEntityService {
         existingTask.setDescription(taskDetailsDTO.getDescription());
         existingTask.setStatus(taskDetailsDTO.getStatus());
         TaskEntity updatedTask = taskRepository.save(existingTask);
-        return objectMapper.convertValue(existingTask, TaskEntityDTO.class);
+        return new TaskEntityDTO(updatedTask);
     }
 
     @Override
@@ -70,7 +68,7 @@ public class TaskEntityServiceImpl implements TaskEntityService {
                                                 newTaskDTO.getDescription(),
                                                 newTaskDTO.getStatus());
         TaskEntity savedTask = taskRepository.save(taskEntity);
-        return objectMapper.convertValue(savedTask, TaskEntityDTO.class);
+        return new TaskEntityDTO(savedTask);
     }
 
     @Override
@@ -78,7 +76,7 @@ public class TaskEntityServiceImpl implements TaskEntityService {
         TaskEntity task = taskRepository.findById(id).orElseThrow(
                 () -> new TaskNotFoundException("Task couldn't be found")
         );
-        UserEntity user = objectMapper.convertValue(userDTO, UserEntity.class);
+        UserEntity user = new UserEntity();
 
         task.setUserEntity(user);
         TaskEntity savedTask = taskRepository.save(task);

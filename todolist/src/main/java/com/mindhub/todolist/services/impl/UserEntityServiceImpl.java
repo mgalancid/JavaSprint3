@@ -1,6 +1,5 @@
 package com.mindhub.todolist.services.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mindhub.todolist.dtos.UserEntityDTO;
 import com.mindhub.todolist.exceptions.UserAlreadyExistsException;
 import com.mindhub.todolist.exceptions.UserNotFoundException;
@@ -23,12 +22,9 @@ public class UserEntityServiceImpl implements UserEntityService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-    private ObjectMapper objectMapper;
 
-    public UserEntityServiceImpl(UserEntityRepository userRepository,
-                                 ObjectMapper objectMapper) {
+    public UserEntityServiceImpl(UserEntityRepository userRepository) {
         this.userRepository = userRepository;
-        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -36,7 +32,7 @@ public class UserEntityServiceImpl implements UserEntityService {
         UserEntity user = userRepository.findById(id).orElseThrow(
                 () -> new UserNotFoundException("User not found with id: " + id)
         );
-        return objectMapper.convertValue(user, UserEntityDTO.class);
+        return new UserEntityDTO(user);
     }
 
     @Override
@@ -44,8 +40,7 @@ public class UserEntityServiceImpl implements UserEntityService {
         List<UserEntity> user = userRepository.findAll();
         return user.stream()
                             .map(
-                                    userEntity -> objectMapper.convertValue(userEntity,
-                                                                            UserEntityDTO.class)
+                                    userEntity -> new UserEntityDTO(userEntity)
                             ).collect(Collectors.toList());
     }
 
@@ -58,7 +53,7 @@ public class UserEntityServiceImpl implements UserEntityService {
         existingUser.setUsername(userDetailsDTO.getName());
         existingUser.setEmail(userDetailsDTO.getEmail());
         UserEntity updatedUser = userRepository.save(existingUser);
-        return objectMapper.convertValue(existingUser, UserEntityDTO.class);
+        return new UserEntityDTO(updatedUser);
     }
 
     @Override
