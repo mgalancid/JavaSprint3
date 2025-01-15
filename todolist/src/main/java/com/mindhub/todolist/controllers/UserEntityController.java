@@ -3,6 +3,7 @@ package com.mindhub.todolist.controllers;
 import com.mindhub.todolist.dtos.NewTaskEntityDTO;
 import com.mindhub.todolist.dtos.TaskEntityDTO;
 import com.mindhub.todolist.dtos.UserEntityDTO;
+import com.mindhub.todolist.exceptions.TaskNotFoundException;
 import com.mindhub.todolist.exceptions.UserNotFoundException;
 import com.mindhub.todolist.services.impl.TaskEntityServiceImpl;
 import com.mindhub.todolist.services.impl.UserEntityServiceImpl;
@@ -66,7 +67,6 @@ public class UserEntityController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdTaskDTO);
     }
 
-    /*
     @Operation(summary = "Assign Task", description = "Assigns a tasks to a user.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User got assigned with a task.",
@@ -77,11 +77,10 @@ public class UserEntityController {
                             schema = @Schema(implementation = TaskEntityDTO.class)))
     })
     @PutMapping("/{id}/assign") // Assign Task
-    public ResponseEntity<TaskEntityDTO> assignTask(@PathVariable Long id, @RequestBody UserEntityDTO userDTO) throws UserNotFoundException {
-        TaskEntityDTO assignedTask = taskService.assignTask(id, userDTO);
+    public ResponseEntity<TaskEntityDTO> assignTask(@PathVariable Long id, Authentication authentication) throws TaskNotFoundException, UserNotFoundException {
+        TaskEntityDTO assignedTask = taskService.assignTask(authentication, id);
         return ResponseEntity.ok(assignedTask);
     }
-    */
 
     @Operation(summary = "Delete User By Email", description = "Deletes an user by Email.")
     @ApiResponses(value = {

@@ -73,12 +73,13 @@ public class TaskEntityServiceImpl implements TaskEntityService {
     }
 
     @Override
-    public TaskEntityDTO assignTask(Authentication authentication, UserEntityDTO userDTO) throws UserNotFoundException {
-        TaskEntity task = taskRepository.findBy
-                .orElseThrow(() -> new TaskNotFoundException("Task with ID " + id + " couldn't be found"));
+    public TaskEntityDTO assignTask(Authentication authentication, Long taskId) throws UserNotFoundException, TaskNotFoundException {
+        String username = authentication.getName(); // Or use a custom method if a different field is needed
+        UserEntity user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("User with username " + username + " couldn't be found"));
 
-        UserEntity user = userRepository.findById(userDTO.getId())
-                .orElseThrow(() -> new UserNotFoundException("User with ID " + userDTO.getId() + " couldn't be found"));
+        TaskEntity task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new TaskNotFoundException("Task with ID " + taskId + " couldn't be found"));
 
         task.setUserEntity(user);
         TaskEntity savedTask = taskRepository.save(task);
@@ -86,13 +87,14 @@ public class TaskEntityServiceImpl implements TaskEntityService {
     }
 
 
+
     @Override
-    public TaskEntityDTO assignTaskById(Long id, Long userId) throws UserNotFoundException {
-        UserEntity user = userRepository.findById(userId).orElseThrow(
-                () -> new TaskNotFoundException("Task couldn't be found")
-        );
+    public TaskEntityDTO assignTaskById(Authentication authentication, Long taskId) throws UserNotFoundException, TaskNotFoundException {
+        String username = authentication.getName();
+        UserEntity user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("User with username " + username + " couldn't be found"));
         UserEntityDTO userDTO = new UserEntityDTO(user);
-        return assignTask(id, userDTO);
+        return null;
     }
 
     @Override

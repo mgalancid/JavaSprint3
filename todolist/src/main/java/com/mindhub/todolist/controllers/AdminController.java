@@ -117,14 +117,14 @@ public class AdminController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = TaskEntityDTO.class)))
     })
+
     @PutMapping("/{id}/assign/{userId}")
-    public ResponseEntity<TaskEntityDTO> assignTaskById(@PathVariable Long id,
-                                                        @PathVariable Long userId) {
+    public ResponseEntity<TaskEntityDTO> assignTaskById(@PathVariable Long id, Authentication authentication) {
         TaskEntityDTO assignedTask = null;
         try {
-            assignedTask = taskService.assignTaskById(id, userId);
-        } catch (UserNotFoundException userNotFoundException) {
-            throw new RuntimeException(userNotFoundException);
+            assignedTask = taskService.assignTaskById(authentication, id);
+        } catch (UserNotFoundException | TaskNotFoundException e) {
+            throw new RuntimeException(e);
         }
         return ResponseEntity.ok(assignedTask);
     }

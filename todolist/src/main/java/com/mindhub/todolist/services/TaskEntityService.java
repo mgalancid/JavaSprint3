@@ -5,6 +5,7 @@ import com.mindhub.todolist.dtos.TaskEntityDTO;
 import com.mindhub.todolist.dtos.UserEntityDTO;
 import com.mindhub.todolist.exceptions.TaskNotFoundException;
 import com.mindhub.todolist.exceptions.UserNotFoundException;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ public interface TaskEntityService {
     List<TaskEntityDTO> getAllTasksDTO();
     TaskEntityDTO updateTask(Long id, TaskEntityDTO taskDetailsDTO) throws TaskNotFoundException;
     NewTaskEntityDTO createNewTask(NewTaskEntityDTO newTaskDTO);
-    TaskEntityDTO assignTask(Long id, UserEntityDTO userDTO) throws UserNotFoundException;
-    TaskEntityDTO assignTaskById(Long id, Long userId) throws UserNotFoundException;
+    TaskEntityDTO assignTask(Authentication authentication, Long taskId) throws UserNotFoundException, TaskNotFoundException;
+    TaskEntityDTO assignTaskById(Authentication authentication, Long taskId) throws UserNotFoundException, TaskNotFoundException;
     void deleteTask(Long id);
 }
