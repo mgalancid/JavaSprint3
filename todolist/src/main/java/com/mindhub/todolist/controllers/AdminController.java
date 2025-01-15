@@ -67,7 +67,7 @@ public class AdminController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = UserEntityDTO.class)))
     })
-    @GetMapping("/{id}") // Get User By ID
+    @GetMapping("/users/{id}") // Get User By ID
     public ResponseEntity<?> getUserById(Authentication authentication, @PathVariable Long id) throws UserNotFoundException {
         authentication.getName();
         try {

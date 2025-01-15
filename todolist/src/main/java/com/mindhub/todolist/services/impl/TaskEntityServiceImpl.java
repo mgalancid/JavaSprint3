@@ -1,6 +1,5 @@
 package com.mindhub.todolist.services.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mindhub.todolist.dtos.NewTaskEntityDTO;
 import com.mindhub.todolist.dtos.TaskEntityDTO;
 import com.mindhub.todolist.dtos.UserEntityDTO;
@@ -11,7 +10,6 @@ import com.mindhub.todolist.repositories.TaskEntityRepository;
 import com.mindhub.todolist.repositories.UserEntityRepository;
 import com.mindhub.todolist.services.TaskEntityService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.config.Task;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -58,17 +56,18 @@ public class TaskEntityServiceImpl implements TaskEntityService {
         existingTask.setDescription(taskDetailsDTO.getDescription());
         existingTask.setStatus(taskDetailsDTO.getStatus());
         TaskEntity updatedTask = taskRepository.save(existingTask);
-        return new TaskEntityDTO(updatedTask);
+        return new TaskEntityDTO(existingTask);
     }
 
     @Override
-    public TaskEntityDTO createNewTask(NewTaskEntityDTO newTaskDTO) {
-
+    public NewTaskEntityDTO createNewTask(NewTaskEntityDTO newTaskDTO) {
         TaskEntity taskEntity = new TaskEntity(newTaskDTO.getTitle(),
-                                                newTaskDTO.getDescription(),
-                                                newTaskDTO.getStatus());
+                newTaskDTO.getDescription(),
+                newTaskDTO.getStatus());
         TaskEntity savedTask = taskRepository.save(taskEntity);
-        return new TaskEntityDTO(savedTask);
+        return new NewTaskEntityDTO(savedTask.getTitle(),
+                                    savedTask.getDescription(),
+                                    savedTask.getStatus());
     }
 
     @Override
