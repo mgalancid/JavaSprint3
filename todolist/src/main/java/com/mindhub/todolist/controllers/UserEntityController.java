@@ -7,6 +7,7 @@ import com.mindhub.todolist.exceptions.UserNotFoundException;
 import com.mindhub.todolist.services.impl.TaskEntityServiceImpl;
 import com.mindhub.todolist.services.impl.UserEntityServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -65,6 +66,7 @@ public class UserEntityController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdTaskDTO);
     }
 
+    /*
     @Operation(summary = "Assign Task", description = "Assigns a tasks to a user.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User got assigned with a task.",
@@ -79,16 +81,17 @@ public class UserEntityController {
         TaskEntityDTO assignedTask = taskService.assignTask(id, userDTO);
         return ResponseEntity.ok(assignedTask);
     }
+    */
 
     @Operation(summary = "Delete User By Email", description = "Deletes an user by Email.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "User got deleted from the database."),
             @ApiResponse(responseCode = "400", description = "User wasn't deleted.")
     })
-    @DeleteMapping // Delete User by Email
-    public ResponseEntity<Void> deleteUserByEmail(@PathVariable String email) {
+    @DeleteMapping("/email") // Delete User by Email
+    public ResponseEntity<Void> deleteUserByEmail(Authentication authentication) {
         try {
-            userService.deleteUserByEmail(email);
+            userService.deleteUserByEmail(authentication.getName());
             return ResponseEntity.noContent().build();
         } catch (UserNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

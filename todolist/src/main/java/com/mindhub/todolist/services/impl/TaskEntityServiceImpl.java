@@ -11,6 +11,7 @@ import com.mindhub.todolist.repositories.TaskEntityRepository;
 import com.mindhub.todolist.repositories.UserEntityRepository;
 import com.mindhub.todolist.services.TaskEntityService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -72,8 +73,8 @@ public class TaskEntityServiceImpl implements TaskEntityService {
     }
 
     @Override
-    public TaskEntityDTO assignTask(Long id, UserEntityDTO userDTO) throws UserNotFoundException {
-        TaskEntity task = taskRepository.findById(id)
+    public TaskEntityDTO assignTask(Authentication authentication, UserEntityDTO userDTO) throws UserNotFoundException {
+        TaskEntity task = taskRepository.findBy
                 .orElseThrow(() -> new TaskNotFoundException("Task with ID " + id + " couldn't be found"));
 
         UserEntity user = userRepository.findById(userDTO.getId())
