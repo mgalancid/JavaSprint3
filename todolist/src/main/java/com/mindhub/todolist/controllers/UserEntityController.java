@@ -1,6 +1,5 @@
 package com.mindhub.todolist.controllers;
 
-import com.mindhub.todolist.dtos.NewUserEntityDTO;
 import com.mindhub.todolist.dtos.TaskEntityDTO;
 import com.mindhub.todolist.dtos.UserEntityDTO;
 import com.mindhub.todolist.exceptions.UserNotFoundException;
