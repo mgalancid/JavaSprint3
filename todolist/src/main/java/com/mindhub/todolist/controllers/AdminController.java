@@ -124,13 +124,13 @@ public class AdminController {
         return ResponseEntity.ok(assignedTask);
     }
 
-    @DeleteMapping("/users/{id}") // Delete Admin By ID
+    @DeleteMapping("/users/{id}") // Delete User By ID
     public ResponseEntity<Void> deleteAdmin(@PathVariable Long id){
             userService.deleteUserById(id);
             return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/{id}") // Delete User By ID
+    @DeleteMapping("/{id}") // Delete Admin By ID
     public void deleteUser(@PathVariable Long id) {
         userService.deleteUserById(id);
     }
