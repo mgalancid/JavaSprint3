@@ -68,10 +68,8 @@ public class UserEntityServiceImpl implements UserEntityService {
 
     @Override
     public void deleteUserByUsername(String username) throws UserNotFoundException {
-        UserEntity user = userRepository.findByUsername(username).orElseThrow(
-                () -> new UserNotFoundException("User not found with username: " + username)
-        );
-        UserEntityDTO userDTO = objectMapper.convertValue(user, UserEntityDTO.class);
+        UserEntity user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("User not found with username: " + username));
         userRepository.delete(user);
     }
 

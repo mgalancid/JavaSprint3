@@ -20,4 +20,9 @@ public class ExceptionHandlers {
         return new ResponseEntity<>(userAlreadyExistsException.getMessage(), HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(UnauthorizedUserException.class)
+    public ResponseEntity<String> unauthorizedUserExceptionHandler(UnauthorizedUserException unauthorizedUserException){
+        return new ResponseEntity<>(unauthorizedUserException.getMessage(), HttpStatus.FORBIDDEN);
+    }
+
 }

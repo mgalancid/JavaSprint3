@@ -57,19 +57,4 @@ public class UserEntityController {
         TaskEntityDTO task = taskService.updateTask(id, taskDTO);
         return ResponseEntity.ok(task);
     }
-
-    @Operation(summary = "Delete User By ID",
-            description = "Deletes the User with the given ID.",
-            parameters = {
-                    @Parameter(name = "id", description = "The ID of the user to delete",
-                            schema = @Schema(type = "long"))
-            },
-            responses = {
-                    @ApiResponse(responseCode = "204", description = "User deleted successfully"),
-                    @ApiResponse(responseCode = "404", description = "User not found")
-            })
-    @DeleteMapping("/{id}") // Delete User By ID
-    public void deleteUser(@PathVariable Long id) {
-        userService.deleteUserById(id);
-    }
 }

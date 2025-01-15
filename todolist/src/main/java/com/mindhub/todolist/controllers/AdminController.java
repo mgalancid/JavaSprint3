@@ -3,19 +3,19 @@ package com.mindhub.todolist.controllers;
 import com.mindhub.todolist.dtos.TaskEntityDTO;
 import com.mindhub.todolist.dtos.UserEntityDTO;
 import com.mindhub.todolist.exceptions.TaskNotFoundException;
+import com.mindhub.todolist.exceptions.UnauthorizedUserException;
 import com.mindhub.todolist.exceptions.UserNotFoundException;
-import com.mindhub.todolist.models.UserEntity;
-import com.mindhub.todolist.services.TaskEntityService;
 import com.mindhub.todolist.services.impl.TaskEntityServiceImpl;
 import com.mindhub.todolist.services.impl.UserEntityServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.config.Task;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,12 +42,19 @@ public class AdminController {
                             schema = @Schema(implementation = UserEntityDTO.class))),
             @ApiResponse(responseCode = "400", description = "Couldn't find all users.",
                     content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UserEntityDTO.class))),
+            @ApiResponse(responseCode = "403", description = "ForbiddenAccess.",
+                    content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = UserEntityDTO.class)))
     })
     @GetMapping("/users") // Get All Users
-    public List<UserEntityDTO> getAllUsers() {
-        List<UserEntityDTO> userDTOS = userService.getAllUsersDTO();
-        return ResponseEntity.ok(userDTOS).getBody();
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<UserEntityDTO>> getAllUsers() {
+        try {
+            List<UserEntityDTO> userDTOS = userService.getAllUsersDTO();
+            return ResponseEntity.ok(userDTOS);
+        } catch (AccessDeniedException e) {
+            throw new UnauthorizedUserException("You don't have permission to access this route");        }
     }
 
     @Operation(summary = "Get User ID", description = "Retrieves the id of an User.")
@@ -95,9 +102,14 @@ public class AdminController {
         return ResponseEntity.ok(taskDTO);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/users/{id}") // Delete Admin By ID
     public ResponseEntity<Void> deleteAdmin(@PathVariable Long id){
             userService.deleteUserById(id);
             return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}") // Delete User By ID
+    public void deleteUser(@PathVariable Long id) {
+        userService.deleteUserById(id);
     }
 }
