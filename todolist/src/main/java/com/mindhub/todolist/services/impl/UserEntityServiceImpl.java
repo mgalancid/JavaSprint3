@@ -6,6 +6,7 @@ import com.mindhub.todolist.exceptions.UserNotFoundException;
 import com.mindhub.todolist.models.RegisterUser;
 import com.mindhub.todolist.models.TaskEntity;
 import com.mindhub.todolist.models.UserEntity;
+import com.mindhub.todolist.repositories.TaskEntityRepository;
 import com.mindhub.todolist.repositories.UserEntityRepository;
 import com.mindhub.todolist.services.UserEntityService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +24,15 @@ public class UserEntityServiceImpl implements UserEntityService {
     private UserEntityRepository userRepository;
 
     @Autowired
+    private TaskEntityRepository taskRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public UserEntityServiceImpl(UserEntityRepository userRepository) {
+    public UserEntityServiceImpl(UserEntityRepository userRepository,
+                                 TaskEntityRepository taskRepository) {
         this.userRepository = userRepository;
+        this.taskRepository = taskRepository;
     }
 
     @Override
@@ -61,12 +67,15 @@ public class UserEntityServiceImpl implements UserEntityService {
 
         if (userDetailsDTO.getTasks() != null && !userDetailsDTO.getTasks().isEmpty()) {
             Set<TaskEntity> updatedTasks = userDetailsDTO.getTasks().stream().map(taskDTO -> {
-                TaskEntity taskEntity = new TaskEntity();
+                TaskEntity taskEntity = taskRepository.findById(taskDTO.getId())
+                        .orElseGet(() -> new TaskEntity(taskDTO.getTitle(),
+                                                        taskDTO.getDescription(),
+                                                        taskDTO.getStatus()));
                 taskEntity.setTitle(taskDTO.getTitle());
                 taskEntity.setDescription(taskDTO.getDescription());
                 taskEntity.setStatus(taskDTO.getStatus());
                 return taskEntity;
-            }).collect(Collectors.toSet()); // Use a Set instead of a List
+            }).collect(Collectors.toSet());
             existingUser.setTask(updatedTasks);
         }
 
@@ -75,14 +84,17 @@ public class UserEntityServiceImpl implements UserEntityService {
     }
 
     @Override
-    public void deleteUserById(Long id) {
-        userRepository.deleteById(id);
+    public void deleteUser(Long id) throws UserNotFoundException { // Admin
+        UserEntity user = userRepository.findById(id).orElseThrow(
+                () -> new UserNotFoundException("User not found with id: " + id)
+        );
+        userRepository.delete(user);
     }
 
     @Override
-    public void deleteUserByUsername(String username) throws UserNotFoundException {
-        UserEntity user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException("User not found with username: " + username));
+    public void deleteUserByEmail(String email) throws UserNotFoundException { // User
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
         userRepository.delete(user);
     }
 

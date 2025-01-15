@@ -125,13 +125,8 @@ public class AdminController {
     }
 
     @DeleteMapping("/users/{id}") // Delete User By ID
-    public ResponseEntity<Void> deleteAdmin(@PathVariable Long id){
-            userService.deleteUserById(id);
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) throws UserNotFoundException {
+            userService.deleteUser(id);
             return ResponseEntity.noContent().build();
-    }
-
-    @DeleteMapping("/{id}") // Delete Admin By ID
-    public void deleteUser(@PathVariable Long id) {
-        userService.deleteUserById(id);
     }
 }

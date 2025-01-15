@@ -62,10 +62,6 @@ public class UserEntityController {
     public ResponseEntity<NewTaskEntityDTO> createNewTask(@RequestBody NewTaskEntityDTO newTaskDTO) {
 
         NewTaskEntityDTO createdTaskDTO = taskService.createNewTask(newTaskDTO);
-
-        if (createdTaskDTO == null) {
-            return ResponseEntity.badRequest().build();
-        }
         return ResponseEntity.status(HttpStatus.CREATED).body(createdTaskDTO);
     }
 
