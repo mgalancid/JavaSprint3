@@ -5,7 +5,9 @@ import com.mindhub.todolist.dtos.NewTaskEntityDTO;
 import com.mindhub.todolist.dtos.TaskEntityDTO;
 import com.mindhub.todolist.exceptions.TaskNotFoundException;
 import com.mindhub.todolist.models.TaskEntity;
+import com.mindhub.todolist.models.UserEntity;
 import com.mindhub.todolist.repositories.TaskEntityRepository;
+import com.mindhub.todolist.repositories.UserEntityRepository;
 import com.mindhub.todolist.services.TaskEntityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,9 +20,13 @@ public class TaskEntityServiceImpl implements TaskEntityService {
 
     @Autowired
     private TaskEntityRepository taskRepository;
+
+    @Autowired
+    private UserEntityRepository userRepository;
     private ObjectMapper objectMapper;
 
     public TaskEntityServiceImpl(TaskEntityRepository taskRepository,
+                                 UserEntityRepository userRepository,
                                  ObjectMapper objectMapper) {
         this.taskRepository = taskRepository;
         this.objectMapper = objectMapper;
@@ -64,6 +70,24 @@ public class TaskEntityServiceImpl implements TaskEntityService {
                                                 newTaskDTO.getStatus());
         TaskEntity savedTask = taskRepository.save(taskEntity);
         return objectMapper.convertValue(savedTask, TaskEntityDTO.class);
+    }
+
+    @Override
+    public TaskEntityDTO assignTask(Long id, UserEntity user) {
+       TaskEntity task = taskRepository.findById(id).orElseThrow(
+               () -> new TaskNotFoundException("Task couldn't be found")
+       );
+       task.setUserEntity(user);
+       TaskEntity savedTask = taskRepository.save(task);
+       return new TaskEntityDTO(savedTask);
+    }
+
+    @Override
+    public TaskEntityDTO assignTaskById(Long id, Long userId) {
+        UserEntity user = userRepository.findById(userId).orElseThrow(
+                () -> new TaskNotFoundException("Task couldn't be found")
+        );
+        return assignTaskById(id, userId);
     }
 
     @Override

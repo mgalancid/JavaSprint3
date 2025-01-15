@@ -1,13 +1,12 @@
 package com.mindhub.todolist.controllers;
 
+import com.mindhub.todolist.dtos.NewTaskEntityDTO;
 import com.mindhub.todolist.dtos.TaskEntityDTO;
 import com.mindhub.todolist.dtos.UserEntityDTO;
 import com.mindhub.todolist.exceptions.UserNotFoundException;
 import com.mindhub.todolist.services.impl.TaskEntityServiceImpl;
 import com.mindhub.todolist.services.impl.UserEntityServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -17,8 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
@@ -55,5 +52,16 @@ public class UserEntityController {
                                                         @RequestBody TaskEntityDTO taskDTO) throws UserNotFoundException {
         TaskEntityDTO task = taskService.updateTask(id, taskDTO);
         return ResponseEntity.ok(task);
+    }
+
+    @PostMapping("/{userId}/tasks") // Create Task
+    public ResponseEntity<TaskEntityDTO> createNewTask(@RequestBody NewTaskEntityDTO newTaskDTO) {
+
+        TaskEntityDTO createdTaskDTO = taskService.createNewTask(newTaskDTO);
+
+        if (createdTaskDTO == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdTaskDTO);
     }
 }

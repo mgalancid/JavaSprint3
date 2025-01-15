@@ -48,7 +48,7 @@ public class SecurityConfig {
                                                             "/swagger-ui.html",
                                                             "/h2-console/**").permitAll()
                                 .requestMatchers( "/api/auth/**", "/index.html" ).permitAll() // Allow public access to specific endpoints
-                                .requestMatchers("/api/user/**").hasAuthority("USER")
+                                .requestMatchers("/api/user/**").hasAnyAuthority("USER", "ADMIN")
                                 .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
                                 .anyRequest().denyAll() // All other requests must be authenticated
                 )

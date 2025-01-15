@@ -80,7 +80,6 @@ public class UserEntityServiceImpl implements UserEntityService {
         }
 
         UserEntity user = new UserEntity();
-        user.setUsername(registerUser.username());
         user.setEmail(registerUser.email());
         user.setPassword(passwordEncoder.encode(registerUser.password()));
 

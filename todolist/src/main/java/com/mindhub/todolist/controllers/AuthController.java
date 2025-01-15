@@ -3,6 +3,8 @@ package com.mindhub.todolist.controllers;
 import com.mindhub.todolist.config.JwtUtils;
 import com.mindhub.todolist.models.LoginUser;
 import com.mindhub.todolist.models.RegisterUser;
+import com.mindhub.todolist.models.UserEntity;
+import com.mindhub.todolist.repositories.UserEntityRepository;
 import com.mindhub.todolist.services.impl.UserEntityServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -29,11 +31,11 @@ public class AuthController {
     private JwtUtils jwtUtil;
 
     @Autowired
+    private UserEntityRepository userRepository;
+
+    @Autowired
     private UserEntityServiceImpl userService;
 
-    public AuthController(UserEntityServiceImpl userService) {
-        this.userService = userService;
-    }
     @Operation(summary = "Authenticate User", description = "Authenticates the user with provided email and password.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User was logged."),
@@ -52,6 +54,7 @@ public class AuthController {
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
+        UserEntity user = userRepository.findByEmail(authentication.getName()).orElseThrow(null);
         String jwt = jwtUtil.generateToken(authentication.getName());
         return ResponseEntity.ok(jwt);
     }
