@@ -48,6 +48,16 @@ public class UserEntityController {
         return ResponseEntity.ok(task);
     }
 
+    @Operation(summary = "Create New Task", description = "Creates a new Task object from.",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "The data to be created",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = TaskEntityDTO.class))))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Task successfully created."),
+            @ApiResponse(responseCode = "400", description = "Bad request, invalid data."),
+            @ApiResponse(responseCode = "409", description = "Conflict data.")
+    })
     @PostMapping("tasks") // Create Task
     public ResponseEntity<TaskEntityDTO> createNewTask(@RequestBody NewTaskEntityDTO newTaskDTO) {
 
@@ -59,10 +69,18 @@ public class UserEntityController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdTaskDTO);
     }
 
-    @PutMapping("/{id}/assign")
-    public ResponseEntity<TaskEntityDTO> assignTask(@PathVariable Long id, @RequestBody UserEntityDTO user) {
-        TaskEntityDTO assignedTask = taskService.assignTask(id, user);
+    @Operation(summary = "Assign Task", description = "Assigns a tasks to a user.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User got assigned with a task.",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = TaskEntityDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Couldn't find user.",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = TaskEntityDTO.class)))
+    })
+    @PutMapping("/{id}/assign") // Assign Task
+    public ResponseEntity<TaskEntityDTO> assignTask(@PathVariable Long id, @RequestBody UserEntityDTO userDTO) {
+        TaskEntityDTO assignedTask = taskService.assignTask(id, userDTO);
         return ResponseEntity.ok(assignedTask);
     }
-
 }
