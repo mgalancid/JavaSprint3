@@ -58,7 +58,10 @@ public class TaskEntityServiceImpl implements TaskEntityService {
 
     @Override
     public TaskEntityDTO createNewTask(NewTaskEntityDTO newTaskDTO) {
-        TaskEntity taskEntity = objectMapper.convertValue(newTaskDTO, TaskEntity.class);
+
+        TaskEntity taskEntity = new TaskEntity(newTaskDTO.getTitle(),
+                                                newTaskDTO.getDescription(),
+                                                newTaskDTO.getStatus());
         TaskEntity savedTask = taskRepository.save(taskEntity);
         return objectMapper.convertValue(savedTask, TaskEntityDTO.class);
     }
