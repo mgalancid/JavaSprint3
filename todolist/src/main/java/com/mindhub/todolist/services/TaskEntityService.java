@@ -2,11 +2,8 @@ package com.mindhub.todolist.services;
 
 import com.mindhub.todolist.dtos.NewTaskEntityDTO;
 import com.mindhub.todolist.dtos.TaskEntityDTO;
-import com.mindhub.todolist.dtos.UserEntityDTO;
 import com.mindhub.todolist.exceptions.TaskNotFoundException;
 import com.mindhub.todolist.exceptions.UserNotFoundException;
-import com.mindhub.todolist.models.TaskEntity;
-import com.mindhub.todolist.models.UserEntity;
 import org.springframework.security.core.Authentication;
 
 import java.util.List;
