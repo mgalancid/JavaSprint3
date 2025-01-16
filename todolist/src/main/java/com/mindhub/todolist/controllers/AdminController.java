@@ -104,8 +104,12 @@ public class AdminController {
     })
     @GetMapping("tasks/{id}") // Get Task by ID
     public ResponseEntity<TaskEntityDTO> getTaskDTOByID(@PathVariable Long id) throws TaskNotFoundException {
-        TaskEntityDTO taskDTO = taskService.getTaskDTOById(id);
-        return ResponseEntity.ok(taskDTO);
+        try {
+            TaskEntityDTO taskDTO = taskService.getTaskDTOById(id);
+            return ResponseEntity.ok(taskDTO);
+        } catch (TaskNotFoundException e) {
+            throw new TaskNotFoundException("Task was not found");
+        }
     }
 
     @Operation(summary = "Assign Task by ID", description = "Assigns a tasks to a user by using it's ID.")
@@ -117,13 +121,17 @@ public class AdminController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = TaskEntityDTO.class)))
     })
-    @PutMapping("/{id}/assign/{userId}")
-    public ResponseEntity<TaskEntityDTO> assignTaskById(@PathVariable Long id, Authentication authentication) {
+    @PutMapping("/{id}/assign/{userId}") // Assign Task by ID
+    public ResponseEntity<TaskEntityDTO> assignTaskById(@PathVariable Long id, Authentication authentication) throws
+            TaskNotFoundException,
+            UserNotFoundException {
         TaskEntityDTO assignedTask = null;
         try {
             assignedTask = taskService.assignTaskById(authentication, id);
-        } catch (UserNotFoundException | TaskNotFoundException e) {
-            throw new RuntimeException(e);
+        } catch (TaskNotFoundException e) {
+            throw new TaskNotFoundException("Task was not found");
+        } catch (UserNotFoundException e) {
+            throw new UserNotFoundException("User was not found");
         }
         return ResponseEntity.ok(assignedTask);
     }
@@ -135,7 +143,12 @@ public class AdminController {
     })
     @DeleteMapping("/users/{id}") // Delete Admin By ID
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) throws UserNotFoundException {
+        try {
             userService.deleteUser(id);
             return ResponseEntity.noContent().build();
+        } catch (UserNotFoundException e) {
+            throw new UserNotFoundException("User was not found");
+        }
+
     }
 }
