@@ -1,9 +1,9 @@
 package com.mindhub.todolist.repositories;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+@DataJpaTest
 class UserEntityRepositoryTest {
 
     @Test
@@ -20,5 +20,25 @@ class UserEntityRepositoryTest {
 
     @Test
     void existsByUsername() {
+    }
+
+    @Test
+    void testFindByUsername() {
+    }
+
+    @Test
+    void testFindByEmail() {
+    }
+
+    @Test
+    void testExistsByEmail() {
+    }
+
+    @Test
+    void testExistsByUsername() {
+    }
+
+    @Test
+    void testFindByRole() {
     }
 }
