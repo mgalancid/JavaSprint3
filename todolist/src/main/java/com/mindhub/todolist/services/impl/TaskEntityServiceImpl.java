@@ -74,7 +74,7 @@ public class TaskEntityServiceImpl implements TaskEntityService {
 
     @Override
     public TaskEntityDTO assignTask(Authentication authentication, Long taskId) throws UserNotFoundException, TaskNotFoundException {
-        String username = authentication.getName(); // Or use a custom method if a different field is needed
+        String username = authentication.getName(); 
         UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("User with username " + username + " couldn't be found"));
 
