@@ -4,6 +4,7 @@ import com.mindhub.todolist.dtos.UserEntityDTO;
 import com.mindhub.todolist.exceptions.UserAlreadyExistsException;
 import com.mindhub.todolist.exceptions.UserNotFoundException;
 import com.mindhub.todolist.models.RegisterUser;
+import com.mindhub.todolist.models.RoleType;
 import com.mindhub.todolist.models.TaskEntity;
 import com.mindhub.todolist.models.UserEntity;
 import com.mindhub.todolist.repositories.TaskEntityRepository;
@@ -125,5 +126,9 @@ public class UserEntityServiceImpl implements UserEntityService {
 
     public boolean isUsernameExists(String username) {
         return userRepository.existsByUsername(username);
+    }
+
+    public List<UserEntity> getUsersByRole(RoleType role) {
+        return userRepository.findByRole(role);
     }
 }

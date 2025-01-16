@@ -31,7 +31,7 @@ public class UserEntity {
         this.email = email;
     }
 
-    @OneToMany(mappedBy = "userEntity")
+    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Set<TaskEntity> tasks = new HashSet<>();
 
     public Long getId() {

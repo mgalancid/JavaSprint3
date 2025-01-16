@@ -86,8 +86,6 @@ public class TaskEntityServiceImpl implements TaskEntityService {
         return new TaskEntityDTO(savedTask);
     }
 
-
-
     @Override
     public TaskEntityDTO assignTaskById(Authentication authentication, Long taskId) throws UserNotFoundException, TaskNotFoundException {
         String username = authentication.getName();
@@ -100,5 +98,26 @@ public class TaskEntityServiceImpl implements TaskEntityService {
     @Override
     public void deleteTask(Long id) {
         taskRepository.deleteById(id);
+    }
+
+    public List<TaskEntity> findByStatus(TaskEntity.TaskStatus status) {
+        TaskEntity.TaskStatus taskStatus = TaskEntity.TaskStatus.valueOf(status.toString());
+        return taskRepository.findByStatus(status);
+    }
+
+    public List<TaskEntity> findByUserEntityAndStatus(UserEntity user, TaskEntity.TaskStatus status) {
+        return taskRepository.findByUserEntityAndStatus(user, status);
+    }
+
+    public List<TaskEntity> findByUserEntity(UserEntity user) {
+        return taskRepository.findByUserEntity(user);
+    }
+
+    public List<TaskEntity> findByTitle(String title) {
+        return taskRepository.findByTitle(title);
+    }
+
+    public Long countByStatus(TaskEntity.TaskStatus status) {
+        return taskRepository.countByStatus(status);
     }
 }

@@ -117,7 +117,6 @@ public class AdminController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = TaskEntityDTO.class)))
     })
-
     @PutMapping("/{id}/assign/{userId}")
     public ResponseEntity<TaskEntityDTO> assignTaskById(@PathVariable Long id, Authentication authentication) {
         TaskEntityDTO assignedTask = null;
