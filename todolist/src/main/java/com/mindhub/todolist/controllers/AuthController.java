@@ -31,9 +31,6 @@ public class AuthController {
     private JwtUtils jwtUtil;
 
     @Autowired
-    private UserEntityRepository userRepository;
-
-    @Autowired
     private UserEntityServiceImpl userService;
 
     @Operation(summary = "Authenticate User", description = "Authenticates the user with provided email and password.")
@@ -54,7 +51,7 @@ public class AuthController {
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        UserEntity user = userRepository.findByEmail(authentication.getName()).orElseThrow(null);
+        UserEntity user = userService.findByEmail(authentication.getName()).orElseThrow(null);
         String jwt = jwtUtil.generateToken(authentication.getName());
         return ResponseEntity.ok(jwt);
     }
