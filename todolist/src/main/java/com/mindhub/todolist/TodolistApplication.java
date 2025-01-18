@@ -19,12 +19,11 @@ public class TodolistApplication {
 		SpringApplication.run(TodolistApplication.class, args);
 	}
 
-	@Autowired
-	private PasswordEncoder passwordEncoder;
-
+	/*
 	@Bean
 	public CommandLineRunner initData(UserEntityRepository userEntityRepository,
-									  TaskEntityRepository taskEntityRepository) {
+									  TaskEntityRepository taskEntityRepository,
+									  PasswordEncoder passwordEncoder) {
 		return args -> {
 			UserEntity user = new UserEntity("John Doe",
 					passwordEncoder.encode("12345678"),
@@ -49,4 +48,6 @@ public class TodolistApplication {
 			System.out.println(taskEntity);
 		};
 	}
+
+	 */
 }

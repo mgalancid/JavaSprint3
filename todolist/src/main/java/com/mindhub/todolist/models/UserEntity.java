@@ -21,6 +21,9 @@ public class UserEntity {
     private String email;
     private RoleType role = RoleType.USER;
 
+    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private Set<TaskEntity> tasks = new HashSet<>();
+
     public UserEntity() { // Hibernate
 
     }
@@ -30,9 +33,6 @@ public class UserEntity {
         this.password = password;
         this.email = email;
     }
-
-    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private Set<TaskEntity> tasks = new HashSet<>();
 
     public Long getId() {
         return id;

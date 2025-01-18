@@ -109,10 +109,6 @@ public class TaskEntityServiceImpl implements TaskEntityService {
         return taskRepository.findByUserEntityAndStatus(user, status);
     }
 
-    public List<TaskEntity> findByUserEntity(UserEntity user) {
-        return taskRepository.findByUserEntity(user);
-    }
-
     public List<TaskEntity> findByTitle(String title) {
         return taskRepository.findByTitle(title);
     }
