@@ -87,17 +87,27 @@ public class TaskEntityServiceImpl implements TaskEntityService {
     }
 
     @Override
-    public TaskEntityDTO assignTaskById(Authentication authentication, Long taskId) throws UserNotFoundException, TaskNotFoundException {
+    public TaskEntityDTO assignTaskById(Authentication authentication, Long taskId)
+            throws UserNotFoundException, TaskNotFoundException {
         String username = authentication.getName();
         UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("User with username " + username + " couldn't be found"));
-        UserEntityDTO userDTO = new UserEntityDTO(user);
-        return null;
+
+        TaskEntity task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new TaskNotFoundException("Task with ID " + taskId + " not found"));
+
+        task.setUserEntity(user);
+        taskRepository.save(task);
+
+        TaskEntityDTO taskDTO = new TaskEntityDTO(task);
+        return taskDTO;
     }
 
     @Override
     public void deleteTask(Long id) {
-        taskRepository.deleteById(id);
+        if (taskRepository.existsById(id)) {
+            taskRepository.deleteById(id);
+        }
     }
 
     public List<TaskEntity> findByStatus(TaskEntity.TaskStatus status) {
