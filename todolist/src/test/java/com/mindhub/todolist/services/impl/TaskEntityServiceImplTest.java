@@ -285,16 +285,14 @@ class TaskEntityServiceImplTest {
     @Test
     void deleteTask_WhenIDFound_ShouldDeleteTask() {
         // Arrange
-        TaskEntity task = new TaskEntity("Task 1",
-                                        "Description",
-                                        TaskEntity.TaskStatus.PENDING);
-        ReflectionTestUtils.setField(task, "id", 1L);
+        Long taskId = 1L;
+        when(taskRepository.existsById(taskId)).thenReturn(true);
 
         // Act
-        taskService.deleteTask(task.getId());
+        taskService.deleteTask(taskId);
 
         // Assert
-        verify(taskRepository, times(1)).deleteById(task.getId());
+        verify(taskRepository, times(1)).deleteById(taskId);
     }
 
     @Test
