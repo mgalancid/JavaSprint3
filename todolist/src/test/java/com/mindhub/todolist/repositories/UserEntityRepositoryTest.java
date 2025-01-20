@@ -40,12 +40,6 @@ public class UserEntityRepositoryTest {
     @Test
     void testFindByUsername_WhenGivenIncorrectUsername_ShouldReturnFalse() {
         // Arrange
-        UserEntity user = new UserEntity();
-        user.setUsername("johndoe");
-        user.setEmail("johndoe@example.com");
-        user.setPassword("password123");
-        entityManager.persistAndFlush(user);
-
         String nonExistentUser = "nonexistent";
 
         // Act
@@ -74,12 +68,6 @@ public class UserEntityRepositoryTest {
     @Test
     void testFindByEmail_WhenGivenIncorrectEmail_ShouldReturnFalse() {
         // Arrange
-        UserEntity user = new UserEntity();
-        user.setUsername("johndoe");
-        user.setEmail("johndoe@example.com");
-        user.setPassword("password123");
-        entityManager.persistAndFlush(user);
-
         String nonExistentEmail = "nonexistent@email.com";
 
         // Act
@@ -146,7 +134,7 @@ public class UserEntityRepositoryTest {
     }
 
     @Test
-    void testFindByRole() {
+    void testFindByRole_WhenRoleFound_ShouldReturnUser() {
         // Arrange
         UserEntity user = new UserEntity();
         user.setUsername("johndoe");
@@ -161,4 +149,22 @@ public class UserEntityRepositoryTest {
         // Assert
         assertFalse(foundUsers.isEmpty(), "User with role should be found");
     }
+
+    @Test
+    void testFindByRole_WhenRoleNotFound_ShouldReturnEmptyList() {
+        // Arrange
+        UserEntity user = new UserEntity();
+        user.setUsername("johndoe");
+        user.setEmail("johndoe@example.com");
+        user.setPassword("password123");
+        user.setRole(RoleType.ADMIN);
+        userRepository.saveAndFlush(user);
+
+        // Act
+        List<UserEntity> foundUsers = userRepository.findByRole(RoleType.USER);
+
+        // Assert
+        assertTrue(foundUsers.isEmpty(), "No user with the specified role should be found");
+    }
+
 }
