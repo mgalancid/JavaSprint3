@@ -5,7 +5,6 @@ import com.mindhub.todolist.models.UserEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,9 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @DataJpaTest
 public class UserEntityRepositoryTest {
     @Autowired
-    private TestEntityManager entityManager;
-
-    @Autowired
     private UserEntityRepository userRepository;
 
     @Test
@@ -28,8 +24,8 @@ public class UserEntityRepositoryTest {
         user.setUsername("johndoe");
         user.setEmail("johndoe@example.com");
         user.setPassword("password123");
-        entityManager.persistAndFlush(user);
-
+        userRepository.saveAndFlush(user);
+        
         // Act
         Optional<UserEntity> foundUser = userRepository.findByUsername("johndoe");
 
@@ -56,7 +52,7 @@ public class UserEntityRepositoryTest {
         user.setUsername("johndoe");
         user.setEmail("johndoe@example.com");
         user.setPassword("password123");
-        entityManager.persistAndFlush(user);
+        userRepository.saveAndFlush(user);
 
         // Act
         Optional<UserEntity> foundUser = userRepository.findByEmail("johndoe@example.com");

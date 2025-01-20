@@ -15,16 +15,16 @@ import static org.junit.jupiter.api.Assertions.*;
 class TaskEntityRepositoryTest {
 
     @Autowired
-    TestEntityManager entityManager;
+    private TaskEntityRepository taskRepository;
 
     @Autowired
-    private TaskEntityRepository taskRepository;
+    private UserEntityRepository userRepository;
 
     @Test
     void testFindByStatus_WhenGivenStatus_ShouldReturnTrue() {
         // Arrange
         TaskEntity task = new TaskEntity("Task1", "Description1", TaskEntity.TaskStatus.PENDING);
-        entityManager.persistAndFlush(task);
+        taskRepository.saveAndFlush(task);
 
         // Act
         List<TaskEntity> result = taskRepository.findByStatus(TaskEntity.TaskStatus.PENDING);
@@ -48,11 +48,11 @@ class TaskEntityRepositoryTest {
     void testFindByUserEntityAndStatus_WhenGivenUser_ShouldReturnTrue() {
         // Arrange
         UserEntity user = new UserEntity();
-        entityManager.persistAndFlush(user);
+        userRepository.saveAndFlush(user);
 
         TaskEntity task = new TaskEntity("Task1", "Description1", TaskEntity.TaskStatus.IN_PROCESS);
         task.setUserEntity(user);
-        entityManager.persistAndFlush(task);
+        taskRepository.saveAndFlush(task);
 
         // Act
         List<TaskEntity> result = taskRepository.findByUserEntityAndStatus(user, TaskEntity.TaskStatus.IN_PROCESS);
@@ -69,11 +69,11 @@ class TaskEntityRepositoryTest {
         UserEntity existingUser = new UserEntity();
         existingUser.setUsername("existingUser");
         existingUser.setEmail("existing@example.com");
-        entityManager.persistAndFlush(existingUser);
+        userRepository.saveAndFlush(existingUser);
 
         TaskEntity task = new TaskEntity("Task1", "Description1", TaskEntity.TaskStatus.PENDING);
         task.setUserEntity(existingUser);
-        entityManager.persistAndFlush(task);
+        taskRepository.saveAndFlush(task);
 
         UserEntity nonExistentUser = new UserEntity();
 
@@ -88,7 +88,7 @@ class TaskEntityRepositoryTest {
     void testFindByTitle_WhenGivenTitle_ShouldReturnTrue() {
         // Arrange
         TaskEntity task = new TaskEntity("UniqueTitle", "Description", TaskEntity.TaskStatus.PENDING);
-        entityManager.persistAndFlush(task);
+        taskRepository.saveAndFlush(task);
 
         // Act
         List<TaskEntity> result = taskRepository.findByTitle("UniqueTitle");
@@ -115,9 +115,9 @@ class TaskEntityRepositoryTest {
         TaskEntity task2 = new TaskEntity("Task 2", "Description 2", TaskEntity.TaskStatus.PENDING);
         TaskEntity task3 = new TaskEntity("Task 3", "Description 3", TaskEntity.TaskStatus.COMPLETED);
 
-        entityManager.persistAndFlush(task1);
-        entityManager.persistAndFlush(task2);
-        entityManager.persistAndFlush(task3);
+        taskRepository.saveAndFlush(task1);
+        taskRepository.saveAndFlush(task2);
+        taskRepository.saveAndFlush(task3);
 
         // Act
         Long countPending = taskRepository.countByStatus(TaskEntity.TaskStatus.PENDING);
@@ -134,8 +134,8 @@ class TaskEntityRepositoryTest {
         TaskEntity task1 = new TaskEntity("Task 1", "Description 1", TaskEntity.TaskStatus.IN_PROCESS);
         TaskEntity task2 = new TaskEntity("Task 2", "Description 2", TaskEntity.TaskStatus.IN_PROCESS);
 
-        entityManager.persistAndFlush(task1);
-        entityManager.persistAndFlush(task2);
+        taskRepository.saveAndFlush(task1);
+        taskRepository.saveAndFlush(task2);
 
         // Act
         Long countPending = taskRepository.countByStatus(TaskEntity.TaskStatus.PENDING);
