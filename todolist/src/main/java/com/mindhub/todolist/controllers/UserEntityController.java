@@ -8,7 +8,6 @@ import com.mindhub.todolist.exceptions.UserNotFoundException;
 import com.mindhub.todolist.services.impl.TaskEntityServiceImpl;
 import com.mindhub.todolist.services.impl.UserEntityServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
