@@ -272,7 +272,7 @@ class TaskEntityServiceImplTest {
     }
 
     @Test
-    public void testAssignTaskById_WhenUserDoesNotExist_ShouldThrowUserNotFoundException() throws UserNotFoundException, TaskNotFoundException {
+    public void testAssignTaskById_WhenUserDoesNotExist_ShouldThrowUserNotFoundException() throws TaskNotFoundException {
         // Arrange
         String username = "invalid_username";
         Mockito.when(authentication.getName()).thenReturn(username);

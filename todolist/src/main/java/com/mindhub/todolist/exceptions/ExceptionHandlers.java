@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ExceptionHandlers {
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<String> userNotFoundExceptionHandler(UserNotFoundException userNotFoundException){
-        return new ResponseEntity<>(userNotFoundException.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(userNotFoundException.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(TaskNotFoundException.class)
     public ResponseEntity<String> taskNotFoundExceptionHandler(TaskNotFoundException taskNotFoundException){
-        return new ResponseEntity<>(taskNotFoundException.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(taskNotFoundException.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(UserAlreadyExistsException.class)
