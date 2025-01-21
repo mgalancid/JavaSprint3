@@ -4,7 +4,6 @@ import com.mindhub.todolist.config.JwtUtils;
 import com.mindhub.todolist.models.LoginUser;
 import com.mindhub.todolist.models.RegisterUser;
 import com.mindhub.todolist.models.UserEntity;
-import com.mindhub.todolist.repositories.UserEntityRepository;
 import com.mindhub.todolist.services.impl.UserEntityServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
