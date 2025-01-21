@@ -2,6 +2,8 @@ package com.mindhub.todolist.controllers;
 
 import com.mindhub.todolist.dtos.TaskEntityDTO;
 import com.mindhub.todolist.dtos.UserEntityDTO;
+import com.mindhub.todolist.exceptions.TaskNotFoundException;
+import com.mindhub.todolist.exceptions.UserNotFoundException;
 import com.mindhub.todolist.models.RegisterUser;
 import com.mindhub.todolist.models.RoleType;
 import com.mindhub.todolist.models.TaskEntity;
@@ -11,24 +13,23 @@ import com.mindhub.todolist.services.impl.TaskEntityServiceImpl;
 import com.mindhub.todolist.services.impl.UserEntityServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import java.util.List;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -62,7 +63,7 @@ class AdminControllerTest {
         // Arrange
         List<UserEntityDTO> userDTOs = createSampleUserDTOs();
 
-        when(userService.getAllUsersDTO()).thenReturn(userDTOs);
+        Mockito.when(userService.getAllUsersDTO()).thenReturn(userDTOs);
 
         // Act & Assert
         mockMvc.perform(get("/users")
@@ -83,7 +84,7 @@ class AdminControllerTest {
         List<UserEntityDTO> emptyUserDTOs = List.of();
 
         // Act
-        when(userService.getAllUsersDTO()).thenReturn(emptyUserDTOs);
+        Mockito.when(userService.getAllUsersDTO()).thenReturn(emptyUserDTOs);
 
         // Assert
         mockMvc.perform(get("/users")
@@ -95,6 +96,59 @@ class AdminControllerTest {
         verify(userService).getAllUsersDTO();
     }
 
+    @Test
+    @WithMockUser(username = "admin@example.com", authorities = "ADMIN")
+    public void testAssignTaskById_WhenUserFound_ShouldAssignTask() throws Exception {
+        // Arrange
+        TaskEntity mockTask = new TaskEntity();
+        ReflectionTestUtils.setField(mockTask, "id", 1L);
+
+        // Act
+        Mockito.when(taskService.assignTaskById(Mockito.any(), Mockito.anyLong()))
+                .thenReturn(
+                        new TaskEntityDTO(mockTask
+                        ));
+
+        // Assert
+        mockMvc.perform(MockMvcRequestBuilders.put("/1/assign/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1));
+    }
+
+    @Test
+    @WithMockUser(username = "admin@example.com", authorities = "ADMIN")
+    public void testAssignTaskById_WhenUserNotFound_ShouldReturnNull() throws Exception {
+
+        // Act & Assert
+        Mockito.when(taskService.assignTaskById(Mockito.any(), Mockito.anyLong()))
+                .thenThrow(
+                        new TaskNotFoundException("Task not found"
+                ));
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/1/assign/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    public void testDeleteUser_WhenUserGetsDelete_ShouldReturnSuccess() throws Exception {
+        doNothing().when(userService).deleteUser(1L);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/users/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
+    }
+
+    @Test
+    public void testDeleteUserNotFound() throws Exception {
+        doThrow(new UserNotFoundException("User not found")).when(userService).deleteUser(1L);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/users/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
     /// Helper
 
     private List<UserEntityDTO> createSampleUserDTOs() {
@@ -103,5 +157,4 @@ class AdminControllerTest {
                 new UserEntityDTO(new UserEntity("user2", "password2", "user2@example.com"))
         );
     }
-
 }
