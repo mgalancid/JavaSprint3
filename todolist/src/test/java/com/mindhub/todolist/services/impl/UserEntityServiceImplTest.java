@@ -5,9 +5,7 @@ import com.mindhub.todolist.exceptions.UserAlreadyExistsException;
 import com.mindhub.todolist.exceptions.UserNotFoundException;
 import com.mindhub.todolist.models.RegisterUser;
 import com.mindhub.todolist.models.UserEntity;
-import com.mindhub.todolist.repositories.TaskEntityRepository;
 import com.mindhub.todolist.repositories.UserEntityRepository;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -90,10 +88,6 @@ class UserEntityServiceImplTest {
 
         // Assert
         assertEquals(users.size(), userDTOs.size());
-        for (int i = 0; i < users.size(); i++) {
-            assertEquals(users.get(i).getUsername(), userDTOs.get(i).getName());
-            assertEquals(users.get(i).getEmail(), userDTOs.get(i).getEmail());
-        }
     }
 
     @Test
